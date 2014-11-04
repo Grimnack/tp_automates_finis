@@ -1,3 +1,8 @@
+/**
+ * @author Matthieu Caron
+ * @author Arnaud Cojez
+ */
+
 package automates;
 
 import java.util.Iterator;
