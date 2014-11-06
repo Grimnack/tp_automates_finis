@@ -4,10 +4,23 @@
  */
 package automates;
 
+import java.util.List;
+
 /**
  * Class defining the AFN, implementing the interface Automata
  */
 public class AFN implements Automata {
+	
+	protected List<State> initialsStates ;
+	protected List<State> finalsStates ;
+	
+	/**
+	 * Constructor of class AFN need two lists of states 
+	 */
+	public AFN(List<State> init, List<State> finals){
+		this.initialsStates = init ;
+		this.finalsStates = finals ;
+	}
 	
 	/**
 	 * returns true if [mot] is accepted by the AFN
@@ -15,10 +28,20 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public boolean accept(String mot) {
-		// TODO Auto-generated method stub 
-		return false;
+		boolean res = true ;
+		
+		
+		return res;
 	}
 
+	private boolean aux(String mot, boolean notAccepted){
+		if(mot == "")
+			return 
+		
+		return notAccepted;
+		
+	}
+	
 	/**
 	 * returns true if the AFN is empty
 	 * @return true if the AFN is empty

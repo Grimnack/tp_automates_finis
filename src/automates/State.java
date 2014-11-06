@@ -8,14 +8,19 @@ package automates;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class State {
-	protected List<Vector> lesVecteurs ;
+	protected Map<Symbole, List<State>> lesVecteurs ;
 	protected String name ;
+	protected boolean isFinal ;
 	
-	public State(LinkedList<Vector> v, String name ){
+	
+	public State(Map<Symbole, List<State>> v, String name,boolean isFinal ){
 		this.lesVecteurs=v ;
 		this.name= name ;
+		this.isFinal=isFinal ;
 	}
 	
 	/**
@@ -25,14 +30,9 @@ public class State {
 	 * @return les prochains états possible depuis l'Etat actuel ou null si rien n'est possible 
 	 */
 	public List<State> delta(Symbole e){
-		Iterator<Vector> i = lesVecteurs.iterator() ;
-		LinkedList<State> res = new LinkedList<State>() ;
-		while(i.hasNext()){
-			State actuel = i.next().readSymbole(e) ;
-			if(actuel!=null)
-				res.add(actuel) ;
-		}
-		return res ;
+	// a completer
+		
+	return null ;
 	}
 
 	
@@ -43,7 +43,9 @@ public class State {
 		return this.name ;
 	}
 	
-	
+	public boolean isFinal() {
+		return this.isFinal ;
+	}
 	
 	
 
