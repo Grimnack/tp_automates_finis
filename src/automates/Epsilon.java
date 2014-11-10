@@ -32,4 +32,5 @@ public class Epsilon implements Symbole {
 	public String toString() {
 		return "Ɛ";
 	}
+
 }
