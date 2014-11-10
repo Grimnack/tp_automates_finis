@@ -24,7 +24,7 @@ public class Epsilon implements Symbole {
 	private Epsilon() {
 		
 	}
-	
+
 	/**
 	 * Returns a string defining the AlphaSymbol
 	 * @return a string defining the AlphaSymbol
