@@ -17,7 +17,7 @@ public class State {
 	public State(Map<Symbole, List<State>> a, String name,boolean isFinal ){
 		this.accessibleStates=a;
 		this.name= name ;
-		this.isFinal=isFinal ;
+		this.isFinal=isFinal;
 	}
 	
 	

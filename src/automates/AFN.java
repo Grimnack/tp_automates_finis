@@ -29,11 +29,15 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public boolean accept(String mot) {
+		AlphaMot leMot = new AlphaMot(mot);
 		boolean res = false;
 		Iterator<State> iter = this.initialsStates.iterator();
 		while(iter.hasNext()){
 			if(mot!=""){
-				List<State> nextStates = iter.next().delta();//ici faut changer
+				List<State> nextStates = iter.next().delta(leMot.getSymboleAt(0));
+				if(nextStates!=null){
+					
+				}
 			}
 		}
 		
