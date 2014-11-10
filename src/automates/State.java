@@ -66,7 +66,10 @@ public class State {
 	 * @return les prochains états possible depuis l'Etat actuel ou null si rien n'est possible 
 	 */
 	public List<State> delta(Symbole e){
-	return null ;
+		if(!(this.accessibleStates.containsKey(e)))
+			return null ;
+			List<State> laListe = this.accessibleStates.get(e);
+			return laListe;
 	}
 
 	

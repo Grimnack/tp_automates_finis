@@ -4,6 +4,7 @@
  */
 package automates;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -28,8 +29,13 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public boolean accept(String mot) {
-		boolean res = true ;
-		
+		boolean res = false;
+		Iterator<State> iter = this.initialsStates.iterator();
+		while(iter.hasNext()){
+			if(mot!=""){
+				List<State> nextStates = iter.next().delta();//ici faut changer
+			}
+		}
 		
 		return res;
 	}
