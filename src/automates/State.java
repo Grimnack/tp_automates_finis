@@ -84,7 +84,20 @@ public class State {
 	public boolean isFinal() {
 		return this.isFinal ;
 	}
-	
-	
 
+
+	/**
+	 * Returns true if a final state can be accessed from this
+	 * @return true if a final state can be accessed from this
+	 */
+	public boolean canAccessFinal() {
+		if(this.isFinal() && this.accessibleStates.isEmpty()) 
+			for (List<State> listeStates : this.accessibleStates.values()) {
+				for (State state : listeStates) {
+					if(state.canAccessFinal())
+						return true;
+				}
+			}
+		return this.isFinal;
+	}
 }

@@ -24,7 +24,7 @@ public class Epsilon implements Symbole {
 	private Epsilon() {
 		
 	}
-	
+
 	/**
 	 * Returns a string defining the AlphaSymbol
 	 * @return a string defining the AlphaSymbol
@@ -32,4 +32,5 @@ public class Epsilon implements Symbole {
 	public String toString() {
 		return "Ɛ";
 	}
+
 }

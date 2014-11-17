@@ -28,6 +28,17 @@ public class AlphaSymbole implements Symbole {
 			throw new IllegalArgumentException("Not a letter");
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + symbole;
+		return result;
+	}
+
 	/**
 	 * Returns true if the two symbols are the same
 	 * @return true if the two symbols are the same
@@ -39,7 +50,7 @@ public class AlphaSymbole implements Symbole {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns a string defining the AlphaSymbol
 	 * @return a string defining the AlphaSymbol
@@ -47,4 +58,5 @@ public class AlphaSymbole implements Symbole {
 	public String toString() {
 		return "" + this.symbole;
 	}
+
 }
