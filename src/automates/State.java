@@ -5,6 +5,7 @@
 
 package automates;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +68,7 @@ public class State {
 	 */
 	public List<State> delta(Symbole e){
 		if(!(this.accessibleStates.containsKey(e)))
-			return null ;
+			return new LinkedList<State>();
 			List<State> laListe = this.accessibleStates.get(e);
 			return laListe;
 	}

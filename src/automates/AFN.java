@@ -5,6 +5,7 @@
 package automates;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -29,34 +30,53 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public boolean accept(String mot) {
-		String chaineActuelle = mot; 
-		boolean res = true;
-		Iterator<State> iter = this.initialsStates.iterator();
-		while(iter.hasNext()&&chaineActuelle!=""){
-			Symbole s = new AlphaSymbole(chaineActuelle.charAt(0)) ;
-			List<State> nextStates = iter.next().delta(s);
-			chaineActuelle = chaineActuelle.substring(1) ;
-			if(nextStates!=null){
-					/*Faut que je pense a faire ça sur papier avant
-					 * mais d'abord dodo */
-				
-			} 
-			
-		}
 		
-		return res;
+		return aux(mot, this.initialsStates);
 	}
 
-	private boolean aux(String mot, boolean notAccepted){
-		if(mot == ""){
-			List<State> nextStates = iter.next().delta(leMot.getSymboleAt(0));
-			if(nextStates!=null){
-				
-			} 
+	/**
+	 * 
+	 * @param mot le mot qui doit etre accepter par l'automate 
+	 * @param list la list des automates a tester 
+	 * @return true quand on a fini la recursivité, et qu'un etat de la liste est un etat final
+	 */
+	private boolean aux(String mot, List<State> list)
+	{
+		if(mot.equalsIgnoreCase(""))
+		{
+			return this.isTerminal(list);
+		}else 
+		{	
+				return aux(mot.substring(1),this.listDelta(list,new AlphaSymbole(mot.charAt(0))));	
 		}
-		return notAccepted;
-		
 	}
+	/**
+	 * 
+	 * @param list
+	 * @param e le symbole a tester 
+	 * @return une liste d'etat qui sont les etats potentiels après l'évaluation de e
+	 */
+	private List<State> listDelta(List<State> list, Symbole e)
+	{
+		List<State> res = new LinkedList<State>() ;
+		for (Iterator<State> i = list.iterator();i.hasNext();)
+		{
+			res.addAll(i.next().delta(e)) ;
+		}
+		return res ;
+	}
+	
+	private boolean isTerminal(List<State> list)
+	{
+		for(Iterator<State> i = list.iterator();i.hasNext();)
+		{
+			if(i.next().isFinal())
+				return true;
+		}
+		return false;
+	}
+	
+	
 	
 	/**
 	 * returns true if the AFN is empty
