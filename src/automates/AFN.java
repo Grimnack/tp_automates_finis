@@ -64,8 +64,11 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		boolean empty = false;
+		for (State state : this.initialsStates) {
+			empty = !state.canAccessFinal();
+		}
+		return empty;
 	}
 
 	/**
