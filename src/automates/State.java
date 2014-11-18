@@ -1,18 +1,17 @@
 /**
  * @author Matthieu Caron
  * @author Arnaud Cojez
- */package automates;
+ */
+package automates;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class State {
 
 	// Fields
-	protected Map<Symbole, List<State>> accessibleStates;
+	protected Map<Symbole, Set<State>> accessibleStates;
 	protected String name;
 	protected boolean isFinal;
 
@@ -25,10 +24,19 @@ public class State {
 	 * @param name
 	 * @param isFinal
 	 */
-	public State(Map<Symbole, List<State>> a, String name, boolean isFinal) {
+	public State(Map<Symbole, Set<State>> a, String name, boolean isFinal) {
 		this.accessibleStates = a;
 		this.name = name;
 		this.isFinal = isFinal;
+	}
+
+	/**
+	 * Return true if this state is a final state
+	 * 
+	 * @return true if this state is a final state
+	 */
+	public boolean isFinal() {
+		return this.isFinal;
 	}
 
 	/**
@@ -40,11 +48,11 @@ public class State {
 	 * @return les prochains états possible depuis l'Etat actuel ou null si rien
 	 *         n'est possible
 	 */
-	public List<State> delta(Symbole e) {
+	public Set<State> delta(Symbole e) {
 		if (!(this.accessibleStates.containsKey(e)))
-			return new LinkedList<State>();
-		List<State> laListe = this.accessibleStates.get(e);
-		return laListe;
+			return new HashSet<State>();
+		Set<State> leSet = this.accessibleStates.get(e);
+		return leSet;
 	}
 
 	/**
@@ -54,49 +62,65 @@ public class State {
 	 */
 	public boolean canAccessFinal() {
 		for (State state : this.getCoAccessibleStates()) {
-			if(state.isFinal())
+			if (state.isFinal())
 				return true;
 		}
 		return this.isFinal;
 	}
 
+	/**
+	 * Returns a Set of States coAccessibles from this state
+	 * 
+	 * @return a Set of States coAccessibles from this state
+	 */
 	public Set<State> getCoAccessibleStates() {
 		return this.getCoAccessibleStates(new HashSet<State>());
 	}
 
-	private Set<State> getCoAccessibleStates(Set<State> coaccessibleStates) {
-		for (List<State> listeStates : this.accessibleStates.values()) {
+	/**
+	 * Private method used by {@link automates.State#getCoAccessibleStates()}
+	 * Returns a Set of States coAccessibles from this state
+	 * 
+	 * @param coaccessibleStates
+	 *            a Set containing the visited states
+	 * @return a Set containing the visited states append by
+	 *         this.accessibleStates
+	 */
+	private Set<State> getCoAccessibleStates(Set<State> visitedStates) {
+		for (Set<State> listeStates : this.accessibleStates.values()) {
 			for (State state : listeStates) {
-				coaccessibleStates.addAll(state.getCoAccessibleStates(coaccessibleStates));
+				visitedStates.add(state);
+				state.getCoAccessibleStates(visitedStates);
 			}
 		}
-		return coaccessibleStates;
+		return visitedStates;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		State other = (State) obj;
-		if (accessibleStates == null) {
-			if (other.accessibleStates != null)
-				return false;
-		} else if (!accessibleStates.equals(other.accessibleStates))
-			return false;
-		return true;
-	}
+	// A RETIRER JE CROIS JE
+//	/*
+//	 * (non-Javadoc)
+//	 * 
+//	 * @see java.lang.Object#equals(java.lang.Object)
+//	 */
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj instanceof State) {
+//			State other = (State) obj;
+//			if (accessibleStates == null) {
+//				if (other.accessibleStates != null)
+//					return false;
+//			} else
+//				if (!accessibleStates.equals(other.accessibleStates))
+//					return false;
+//			return true;
+//		}
+//		return false;
+//	}
 
 	/**
 	 * Renvoie le nom de l'Etat
+	 * 
+	 * @return a string containing the name of the state
 	 */
 	public String toString() {
 		return this.name;
@@ -115,9 +139,5 @@ public class State {
 				* result
 				+ ((accessibleStates == null) ? 0 : accessibleStates.hashCode());
 		return result;
-	}
-
-	public boolean isFinal() {
-		return this.isFinal;
 	}
 }
