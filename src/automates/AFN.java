@@ -109,16 +109,18 @@ public class AFN implements Automata {
 	public AFN deterministic() {
 		Set<State> lesEtats = this.initialsStates ;
 		boolean onContinue = true ;
+		int numEtat = 0 ;
 		while(onContinue){
 			onContinue=false;
 			/*pour chaque etat du set si on accede à un etat qui appartient pas au set on continue
 			 * on ajoute l'etat au set
 			 * sinon on stop*/
 			for(State state : lesEtats){
+				nouvelEtat = new State() ;
 				for(Symbole e : this.alphabet){
-					Set<State> nouveau = this.ajouteNouveaux(state.delta(e),lesEtats);
-					if(!nouveau.equals(lesEtats)){ /*En gros 1 etat a été rajouté, bon maintenant coco réfléchit pour build l'AFN en meme temps*/
-						lesEtats = nouveau ;
+					State nouveau = this.ajouteNouveaux(state.delta(e),lesEtats);
+					if(nouveau != null){ /*En gros 1 etat a été rajouté, bon maintenant coco réfléchit pour build l'AFN en meme temps*/
+						lesEtats.add(nouveau) ;
 						onContinue = true ;
 					}
 						
@@ -127,8 +129,10 @@ public class AFN implements Automata {
 		}
 		return new AFN() ;
 	}
-	/*Il faut maintenant que ajouteNouveaux ajoute un State qui en contient plusieurs quand c est necessaire*/
-	private Set<State> ajouteNouveaux(Set<State> nouveaux,Set<State> courants){
+	/*
+	 * 
+	 */
+	private State envoieNouveau(Set<State> nouveaux,Set<State> courants){
 		Set<State> res = courants ;
 		State etatARajouter ;
 		Iterator<State> i = nouveaux.iterator();
@@ -137,9 +141,9 @@ public class AFN implements Automata {
 			while(i.hasNext()){
 				etatARajouter.fusionne(i.next());
 			}
-			res.add(etatARajouter);
+			return etatARajouter ;
 		}
-		return res ;
+		return null;
 		
 	}
 	
