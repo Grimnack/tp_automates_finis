@@ -7,6 +7,7 @@ package automates;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class defining the AFN, implementing the interface Automata
@@ -15,13 +16,15 @@ public class AFN implements Automata {
 	
 	protected List<State> initialsStates ;
 	protected List<State> finalsStates ;
+	protected Set<Symbole> alphabet ;
 	
 	/**
 	 * Constructor of class AFN need two lists of states 
 	 */
-	public AFN(List<State> init, List<State> finals){
+	public AFN(List<State> init, List<State> finals,Set<Symbole> alphabet){
 		this.initialsStates = init ;
 		this.finalsStates = finals ;
+		this.alphabet = alphabet ;
 	}
 	
 	/**
@@ -97,7 +100,10 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public AFN deterministic() {
-		// TODO Auto-generated method stub
+		/*Bon là on admet que l'on a un Set des etats initiaux*/
+		/*etape 1*/
+		/*On donne un set d'etats, pour chaque symbole de l'alphabet on obtient un Set.*/
+		/*j'ai ajouté l'attribut alphabet dans AFN, il faut aussi je pense ajouter le boolean isInitial dans State*/
 		return null;
 	}
 }
