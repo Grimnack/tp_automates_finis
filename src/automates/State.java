@@ -40,11 +40,29 @@ public class State {
 		this.accessibleStates = new HashMap<Symbole, Set<State>>() ;
 	}
 	
+	/**
+	 * Adds the accessible state with the symbole e to this
+	 * @param state the State we want to add
+	 * @param e the Symbole we want the State to be added
+	 */
 	public void addAccessibleState(State state, Symbole e){
 		if(!this.accessibleStates.containsKey(e))
 			this.accessibleStates.put(e, new HashSet<State>());
 		this.accessibleStates.get(e).add(state);
 	}
+	
+	/**
+	 * Adds all the accessible states of [state] to this
+	 * @param state the state from which we get the states
+	 */
+	private void addAllAccessibleStates(State state) {
+		for (Symbole sym : state.accessibleStates.keySet()) {
+			if(!this.accessibleStates.containsKey(sym))
+				this.accessibleStates.put(sym, new HashSet<State>());
+			this.accessibleStates.get(sym).addAll(state.delta(sym));
+		}
+	}
+	
 	/**
 	 * Return true if this state is a final state
 	 * 
@@ -75,7 +93,10 @@ public class State {
 		String stResName = "{" + st1.toString() + ", " + st2.toString() + "}";
 		boolean stResIsInit =  st1.isInit() || st2.isInit();
 		boolean stResIsFinal = st1.isFinal() || st2.isFinal();
-		return new State(stResName, stResIsInit, stResIsFinal);
+		State stRes = new State(stResName, stResIsInit, stResIsFinal);
+		stRes.addAllAccessibleStates(st1);
+		stRes.addAllAccessibleStates(st2);
+		return stRes;
 	}
 	
 	/**
