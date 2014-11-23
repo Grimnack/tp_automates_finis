@@ -52,6 +52,15 @@ public class State {
 	public boolean isFinal() {
 		return this.isFinal;
 	}
+	
+	/**
+	 * Return true if this is an initial state
+	 * 
+	 * @return true if this is an initial state
+	 */
+	public boolean isInit() {
+		return this.isInit;
+	}
 
 	/**
 	 * Permet de connaitre les prochains Etats, attention c est un AFN il y a
