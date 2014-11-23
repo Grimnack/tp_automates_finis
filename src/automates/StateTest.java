@@ -7,8 +7,6 @@ package automates;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -23,16 +21,11 @@ public class StateTest {
 	 */
 	@Test
 	public void testDelta() {
-		State stateA = new State(new HashMap<Symbole, Set<State>>(), "State a", true);
-		State stateB = new State(new HashMap<Symbole, Set<State>>(), "State b", true);
-		HashMap<Symbole, Set<State>> mapStates = new HashMap<Symbole, Set<State>>();
-		Set<State> setStateA = new HashSet<State>();
-		setStateA.add(stateA);
-		Set<State> setStateB = new HashSet<State>();
-		setStateB.add(stateB);
-		mapStates.put(new AlphaSymbole('a'), setStateA);
-		mapStates.put(new AlphaSymbole('b'), setStateB);
-		State stateTot = new State(mapStates, "tot", false);
+		State stateA = new State("State a", false, true);
+		State stateB = new State("State b", false, true);
+		State stateTot = new State("tot", true, false);
+		stateTot.addAccessibleState(stateA, new AlphaSymbole('a'));
+		stateTot.addAccessibleState(stateB, new AlphaSymbole('b'));
 		assertTrue(stateA.delta(new AlphaSymbole('a')).isEmpty());
 		assertTrue(stateTot.delta(new AlphaSymbole('a')).contains(stateA));
 		assertTrue(stateTot.delta(new AlphaSymbole('b')).contains(stateB));
@@ -45,16 +38,12 @@ public class StateTest {
 	 */
 	@Test
 	public void testCanAccessFinal() {
-		State stateA = new State(new HashMap<Symbole, Set<State>>(), "State a", true);
-		State stateB = new State(new HashMap<Symbole, Set<State>>(), "State b", false);
-		HashMap<Symbole, Set<State>> mapStates = new HashMap<Symbole, Set<State>>();
-		Set<State> setStateA = new HashSet<State>();
-		setStateA.add(stateA);
-		Set<State> setStateB = new HashSet<State>();
-		setStateB.add(stateB);
-		mapStates.put(new AlphaSymbole('a'), setStateA);
-		mapStates.put(new AlphaSymbole('b'), setStateB);
-		State stateTot = new State(mapStates, "tot", false);
+		State stateA = new State("State a", false, true);
+		State stateB = new State("State b", false, false);
+		State stateTot = new State("tot", true, false);
+		stateTot.addAccessibleState(stateA, new AlphaSymbole('a'));
+		stateTot.addAccessibleState(stateB, new AlphaSymbole('b'));
+		assertTrue(stateA.delta(new AlphaSymbole('a')).isEmpty());
 		assertTrue(stateTot.canAccessFinal());
 		assertTrue(stateA.canAccessFinal());
 		assertFalse(stateB.canAccessFinal());
@@ -65,16 +54,11 @@ public class StateTest {
 	 */
 	@Test
 	public void testGetCoAccessibleStates() {
-		State stateA = new State(new HashMap<Symbole, Set<State>>(), "State a", true);
-		State stateB = new State(new HashMap<Symbole, Set<State>>(), "State b", false);
-		HashMap<Symbole, Set<State>> mapStates = new HashMap<Symbole, Set<State>>();
-		Set<State> setStateA = new HashSet<State>();
-		setStateA.add(stateA);
-		Set<State> setStateB = new HashSet<State>();
-		setStateB.add(stateB);
-		mapStates.put(new AlphaSymbole('a'), setStateA);
-		mapStates.put(new AlphaSymbole('b'), setStateB);
-		State stateTot = new State(mapStates, "tot", false);
+		State stateA = new State("State a", false, true);
+		State stateB = new State("State b", false, false);
+		State stateTot = new State("tot", true, false);
+		stateTot.addAccessibleState(stateA, new AlphaSymbole('a'));
+		stateTot.addAccessibleState(stateB, new AlphaSymbole('b'));
 		Set<State> coAccess = stateTot.getCoAccessibleStates();
 		assertFalse(coAccess.isEmpty());
 		assertTrue(coAccess.contains(stateA));
@@ -86,10 +70,21 @@ public class StateTest {
 	 */
 	@Test
 	public void testIsFinal() {
-		State stateFinal = new State(new HashMap<Symbole, Set<State>>(), "testFinal", true);
-		State stateNotFinal = new State(new HashMap<Symbole, Set<State>>(), "testNotFinal", false);
+		State stateFinal = new State("testFinal", true, true);
+		State stateNotFinal = new State("testNotFinal", true, false);
 		assertTrue(stateFinal.isFinal());
 		assertFalse(stateNotFinal.isFinal());
+	}
+
+	/**
+	 * Test method for {@link automates.State#isInit()}.
+	 */
+	@Test
+	public void testIsInit() {
+		State stateInit = new State("testInit", true, true);
+		State stateNotInit = new State("testNotInit", false, true);
+		assertTrue(stateInit.isInit());
+		assertFalse(stateNotInit.isInit());
 	}
 
 }
