@@ -14,86 +14,124 @@ import java.util.Set;
  * Class defining the AFN, implementing the interface Automata
  */
 public class AFN implements Automata {
-	
-	protected Set<State> initialsStates ;
-	protected Set<Symbole> alphabet ;
-	
-	
-	
-	
-	
+
+	protected Set<State> initialsStates;
+	protected Set<Symbole> alphabet;
+
 	/**
-	 * Constructor of class AFN need two lists of states 
+	 * Constructor of class AFN
+	 * 
+	 * @param init
+	 *            Set of initial States
+	 * @param alphabet
+	 *            Set of symbols representing the alphabet
 	 */
-	public AFN(Set<State> init, Set<Symbole> alphabet){
-		this.initialsStates = init ;
-		this.alphabet = alphabet ;
+	public AFN(Set<State> init, Set<Symbole> alphabet) {
+		this.initialsStates = init;
+		this.alphabet = alphabet;
 	}
-	public AFN(Set<Symbole> alpha){
-		this.initialsStates=new HashSet<State>() ;
-		this.alphabet=alpha;
+
+	/**
+	 * Constructor of class AFN The initial States will be added after the
+	 * construction by {@link addState}
+	 * 
+	 * @param alphabet
+	 *            Set of symbols representing the alphabet
+	 */
+	public AFN(Set<Symbole> alpha) {
+		this.initialsStates = new HashSet<State>();
+		this.alphabet = alpha;
 	}
-	
-	public void addState(State state){
+
+	/**
+	 * Adds an initial State to this
+	 * 
+	 * @param state
+	 *            the State to add
+	 */
+	public void addState(State state) {
 		this.initialsStates.add(state);
 	}
-	
+
+	/**
+	 * Adds a Set of initial States to this
+	 * 
+	 * @param lesEtats
+	 *            the Set containing the States to add
+	 */
+	public void addStateSet(Set<State> lesEtats) {
+		for (State state : lesEtats) {
+			this.addState(state);
+		}
+
+	}
+
 	/**
 	 * returns true if [mot] is accepted by the AFN
+	 * 
 	 * @return true if [mot] is accepted by the AFN
 	 */
 	@Override
 	public boolean accept(String mot) {
-		
+
 		return aux(mot, this.initialsStates);
 	}
 
 	/**
+	 * Recursive function used by accept
 	 * 
-	 * @param mot le mot qui doit etre accepter par l'automate 
-	 * @param list la list des automates a tester 
-	 * @return true quand on a fini la recursivité, et qu'un etat de la liste est un etat final
+	 * @param mot
+	 *            the word we want to test
+	 * @param set
+	 *            the state where we start to test
+	 * @return true when we passed by all states and a State in [set] is final
 	 */
-	private boolean aux(String mot, Set<State> list)
-	{
-		if(mot.equalsIgnoreCase(""))
-		{
-			return this.isTerminal(list);
-		}else 
-		{	
-				return aux(mot.substring(1),this.listDelta(list,new AlphaSymbole(mot.charAt(0))));	
+	private boolean aux(String mot, Set<State> set) {
+		if (mot.equalsIgnoreCase("")) {
+			return this.isTerminal(set);
+		} else {
+			return aux(mot.substring(1),
+					this.deltaSet(set, new AlphaSymbole(mot.charAt(0))));
 		}
 	}
+
 	/**
+	 * Function used by aux Returns a Set of States reached from the States in
+	 * [set] with the Symbole [e] transition
 	 * 
-	 * @param list
-	 * @param e le symbole a tester 
-	 * @return une liste d'etat qui sont les etats potentiels après l'évaluation de e
+	 * @param set
+	 *            the Set of States where we start searching
+	 * @param e
+	 *            the Symbole of the transition
+	 * @return a Set of States reached from the States in [set] with the Symbole
+	 *         [e] transition
 	 */
-	private Set<State> listDelta(Set<State> list, Symbole e)
-	{
-		Set<State> res = new HashSet<State>() ;
-		for (Iterator<State> i = list.iterator();i.hasNext();)
-		{
-			res.addAll(i.next().delta(e)) ;
+	private Set<State> deltaSet(Set<State> set, Symbole e) {
+		Set<State> res = new HashSet<State>();
+		for (Iterator<State> i = set.iterator(); i.hasNext();) {
+			res.addAll(i.next().delta(e));
 		}
-		return res ;
+		return res;
 	}
-	
-	private boolean isTerminal(Set<State> set)
-	{
-		for(Iterator<State> i = set.iterator();i.hasNext();)
-		{
-			if(i.next().isFinal())
+
+	/**
+	 * Function used by aux Returns true if a State in [set] is Final
+	 * 
+	 * @param set
+	 *            the Set analysed
+	 * @return true if a State in [set] is Final
+	 */
+	private boolean isTerminal(Set<State> set) {
+		for (Iterator<State> i = set.iterator(); i.hasNext();) {
+			if (i.next().isFinal())
 				return true;
 		}
 		return false;
 	}
-	
-	
-	
+
 	/**
-	 * returns true if the AFN is empty
+	 * Returns true if the AFN is empty
+	 * 
 	 * @return true if the AFN is empty
 	 */
 	@Override
@@ -106,84 +144,85 @@ public class AFN implements Automata {
 	}
 
 	/**
-	 * returns an deterministic version of the AFN
+	 * Returns an deterministic version of the AFN
+	 * 
 	 * @return the AFD based on this AFN
 	 */
 	@Override
 	public AFN deterministic() {
-		Set<State> lesEtats = this.initialsStates ;
-		boolean onContinue = true ;
-		int numEtat = 0 ;
-		while(onContinue){
-			onContinue=false;
-			/*pour chaque etat du set si on accede à un etat qui appartient pas au set on continue
-			 * on ajoute l'etat au set
-			 * sinon on stop*/
-			for(State state : lesEtats){
-				for(Symbole e : this.alphabet){
-					State nouveau = this.envoieNouveau(state.delta(e),lesEtats);
-					if(nouveau != null){ /*En gros 1 etat a été rajouté, bon maintenant coco réfléchit pour build l'AFN en meme temps*/
-						lesEtats.add(nouveau) ;
-						onContinue = true ;
+		Set<State> lesEtats = this.initialsStates;
+		boolean onContinue = true;
+		int numEtat = 0;
+		while (onContinue) {
+			onContinue = false;
+			/*
+			 * pour chaque etat du set si on accede à un etat qui appartient pas
+			 * au set on continue on ajoute l'etat au set sinon on stop
+			 */
+			for (State state : lesEtats) {
+				for (Symbole e : this.alphabet) {
+					State nouveau = this
+							.envoieNouveau(state.delta(e), lesEtats);
+					if (nouveau != null) { /*
+											 * En gros 1 etat a été rajouté, bon
+											 * maintenant coco réfléchit pour
+											 * build l'AFN en meme temps
+											 */
+						lesEtats.add(nouveau);
+						onContinue = true;
 					}
-						
+
 				}
 			}
 		}
-		AFN res = new AFN(this.alphabet) ;
-		/*il faut ajouter les etats initiaux du set les Etats*/
-		res.addInit(lesEtats) ;
-		return res ;
+		AFN res = new AFN(this.alphabet);
+		/* il faut ajouter les etats initiaux du set les Etats */
+		res.addStateSet(lesEtats);
+		return res;
 	}
-	/*
+
+	/**
+	 * Function used by deterministic Returns a new State which contains all the
+	 * State characteristics of the [nouveaux]'s States
 	 * 
+	 * @param nouveaux
+	 * @param courants
+	 * @return a new State which contains all the State characteristics of the
+	 *         [nouveaux]'s States
 	 */
-	private State envoieNouveau(Set<State> nouveaux,Set<State> courants){
-		Set<State> res = courants ;
-		State etatARajouter ;
+	private State envoieNouveau(Set<State> nouveaux, Set<State> courants) {
+		Set<State> res = courants;
+		State etatARajouter;
 		Iterator<State> i = nouveaux.iterator();
 		etatARajouter = i.next();
-		if(containsMany(nouveaux)){
-			while(i.hasNext()){
-				etatARajouter.fusionne(i.next());
+		if (containsMany(nouveaux)) {
+			while (i.hasNext()) {
+				State.merge(etatARajouter, i.next());
 			}
-			return etatARajouter ;
+			return etatARajouter;
 		}
 		return null;
-		
+
 	}
-	
-	private boolean containsMany(Set<State> ensemble){
-		int cpt = 0 ;
-		/*ce qui serait cool ce serait de savoir si nouveaux contient plusieurs etats */
-		for(State state : ensemble )
+
+	/**
+	 * Returns true if there is more than one State in [ensemble]
+	 * 
+	 * @param ensemble
+	 *            the Set of State we want to analyse
+	 * @return true if there is more than one State in [ensemble]
+	 */
+	private boolean containsMany(Set<State> ensemble) {
+		int cpt = 0;
+		/*
+		 * ce qui serait cool ce serait de savoir si nouveaux contient plusieurs
+		 * etats
+		 */
+		for (State state : ensemble)
 			cpt++;
-		if(cpt>1)
-			return true ;
-		return false ;
+		if (cpt > 1)
+			return true;
+		return false;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
