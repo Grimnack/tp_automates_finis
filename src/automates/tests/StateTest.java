@@ -2,7 +2,7 @@
  * @author Matthieu Caron
  * @author Arnaud Cojez
  */
-package automates;
+package automates.tests;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.Set;
 
 import org.junit.Test;
+
+import automates.AlphaSymbole;
+import automates.State;
+import automates.Symbole;
 
 /**
  * Class defining the StateTest

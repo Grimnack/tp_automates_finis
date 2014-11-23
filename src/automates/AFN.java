@@ -136,11 +136,11 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public boolean isEmpty() {
-		boolean empty = false;
 		for (State state : this.initialsStates) {
-			empty = !state.canAccessFinal();
+			if(state.canAccessFinal())
+				return false;
 		}
-		return empty;
+		return true;
 	}
 
 	/**
