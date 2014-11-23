@@ -117,7 +117,7 @@ public class AFN implements Automata {
 			for(State state : lesEtats){
 				for(Symbole e : this.alphabet){
 					Set<State> nouveau = this.ajouteNouveaux(state.delta(e),lesEtats);
-					if(!nouveau.equals(lesEtats)){
+					if(!nouveau.equals(lesEtats)){ /*En gros 1 etat a été rajouté, bon maintenant coco réfléchit pour build l'AFN en meme temps*/
 						lesEtats = nouveau ;
 						onContinue = true ;
 					}
@@ -130,15 +130,28 @@ public class AFN implements Automata {
 	/*Il faut maintenant que ajouteNouveaux ajoute un State qui en contient plusieurs quand c est necessaire*/
 	private Set<State> ajouteNouveaux(Set<State> nouveaux,Set<State> courants){
 		Set<State> res = courants ;
-		for(State state : nouveaux){
-			if(!courants.contains(state))
-				res.add(state);
+		State etatARajouter ;
+		Iterator<State> i = nouveaux.iterator();
+		etatARajouter = i.next();
+		if(containsMany(nouveaux)){
+			while(i.hasNext()){
+				etatARajouter.fusionne(i.next());
+			}
+			res.add(etatARajouter);
 		}
-		return res;
+		return res ;
 		
 	}
 	
-	
+	private boolean containsMany(Set<State> ensemble){
+		int cpt = 0 ;
+		/*ce qui serait cool ce serait de savoir si nouveaux contient plusieurs etats */
+		for(State state : ensemble )
+			cpt++;
+		if(cpt>1)
+			return true ;
+		return false ;
+	}
 	
 	
 	
