@@ -63,8 +63,16 @@ public class State {
 		return this.isInit;
 	}
 
+	/**
+	 * Merges two states in a returned one
+	 * name = {n1, n2}
+	 * isInit & isFalse = true if st1 or st2 is true
+	 * @param st1 the first state
+	 * @param st2 the second state
+	 * @return a new state in which st1 & st2 merged
+	 */
 	public static State merge(State st1, State st2) {
-		String stResName = st1.toString() + ", " + st2.toString();
+		String stResName = "{" + st1.toString() + ", " + st2.toString() + "}";
 		boolean stResIsInit =  st1.isInit() || st2.isInit();
 		boolean stResIsFinal = st1.isFinal() || st2.isFinal();
 		return new State(stResName, stResIsInit, stResIsFinal);

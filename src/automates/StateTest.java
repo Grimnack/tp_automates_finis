@@ -6,6 +6,7 @@ package automates;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Set;
 
@@ -87,4 +88,18 @@ public class StateTest {
 		assertFalse(stateNotInit.isInit());
 	}
 
+	/**
+	 * Test method for {@link automates.State#merge()}.
+	 */
+	@Test
+	public void testMerge() {
+		State stateA = new State("stateA", true, false);
+		State stateB = new State("stateB", false, true);
+		State stateAB = State.merge(stateA, stateB);
+		assertEquals("{stateA, stateB}", stateAB.toString());
+		assertTrue(stateAB.isInit());
+		assertTrue(stateAB.isFinal());
+	}
+	
+	
 }
