@@ -107,18 +107,60 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public AFN deterministic() {
-		return this.recDeterministic(this.initialsStates, new AFN());
+		Set<State> lesEtats = this.initialsStates ;
+		boolean onContinue = true ;
+		while(onContinue){
+			onContinue=false;
+			/*pour chaque etat du set si on accede à un etat qui appartient pas au set on continue
+			 * on ajoute l'etat au set
+			 * sinon on stop*/
+			for(State state : lesEtats){
+				for(Symbole e : this.alphabet){
+					Set<State> nouveau = this.ajouteNouveaux(state.delta(e),lesEtats);
+					if(!nouveau.equals(lesEtats)){
+						lesEtats = nouveau ;
+						onContinue = true ;
+					}
+						
+				}
+			}
+		}
+		return new AFN() ;
+	}
+	/*Il faut maintenant que ajouteNouveaux ajoute un State qui en contient plusieurs quand c est necessaire*/
+	private Set<State> ajouteNouveaux(Set<State> nouveaux,Set<State> courants){
+		Set<State> res = courants ;
+		for(State state : nouveaux){
+			if(!courants.contains(state))
+				res.add(state);
+		}
+		return res;
 		
-		
-		
-		/*Bon là on admet que l'on a un Set des etats initiaux*/
-		/*etape 1*/
-		/*On donne un set d'etats, pour chaque symbole de l'alphabet on obtient un Set.*/
-		/*j'ai ajouté l'attribut alphabet dans AFN, il faut aussi je pense ajouter le boolean isInitial dans State*/
 	}
 	
-	private AFN recDeterministic(Set<State> toRead,AFN afd) {
-		return afd ;
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
