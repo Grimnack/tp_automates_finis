@@ -4,6 +4,7 @@
  */
 package automates;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,17 +15,23 @@ import java.util.Set;
  */
 public class AFN implements Automata {
 	
-	protected List<State> initialsStates ;
-	protected List<State> finalsStates ;
+	protected Set<State> initialsStates ;
 	protected Set<Symbole> alphabet ;
+	
+	
+	
+	
 	
 	/**
 	 * Constructor of class AFN need two lists of states 
 	 */
-	public AFN(List<State> init, List<State> finals,Set<Symbole> alphabet){
+	public AFN(Set<State> init, Set<Symbole> alphabet){
 		this.initialsStates = init ;
-		this.finalsStates = finals ;
 		this.alphabet = alphabet ;
+	}
+	public AFN(){
+		this.initialsStates=new HashSet<State>() ;
+		this.alphabet=new HashSet<Symbole>();
 	}
 	
 	/**
@@ -43,7 +50,7 @@ public class AFN implements Automata {
 	 * @param list la list des automates a tester 
 	 * @return true quand on a fini la recursivité, et qu'un etat de la liste est un etat final
 	 */
-	private boolean aux(String mot, List<State> list)
+	private boolean aux(String mot, Set<State> list)
 	{
 		if(mot.equalsIgnoreCase(""))
 		{
@@ -59,9 +66,9 @@ public class AFN implements Automata {
 	 * @param e le symbole a tester 
 	 * @return une liste d'etat qui sont les etats potentiels après l'évaluation de e
 	 */
-	private List<State> listDelta(List<State> list, Symbole e)
+	private Set<State> listDelta(Set<State> list, Symbole e)
 	{
-		List<State> res = new LinkedList<State>() ;
+		Set<State> res = new HashSet<State>() ;
 		for (Iterator<State> i = list.iterator();i.hasNext();)
 		{
 			res.addAll(i.next().delta(e)) ;
@@ -69,9 +76,9 @@ public class AFN implements Automata {
 		return res ;
 	}
 	
-	private boolean isTerminal(List<State> list)
+	private boolean isTerminal(Set<State> set)
 	{
-		for(Iterator<State> i = list.iterator();i.hasNext();)
+		for(Iterator<State> i = set.iterator();i.hasNext();)
 		{
 			if(i.next().isFinal())
 				return true;
@@ -100,10 +107,18 @@ public class AFN implements Automata {
 	 */
 	@Override
 	public AFN deterministic() {
+		return this.recDeterministic(this.initialsStates, new AFN());
+		
+		
+		
 		/*Bon là on admet que l'on a un Set des etats initiaux*/
 		/*etape 1*/
 		/*On donne un set d'etats, pour chaque symbole de l'alphabet on obtient un Set.*/
 		/*j'ai ajouté l'attribut alphabet dans AFN, il faut aussi je pense ajouter le boolean isInitial dans State*/
-		return null;
 	}
+	
+	private AFN recDeterministic(Set<State> toRead,AFN afd) {
+		return afd ;
+	}
+	
 }
