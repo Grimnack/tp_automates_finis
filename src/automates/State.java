@@ -40,9 +40,9 @@ public class State {
 	}
 	
 	public void addAccessibleState(State state, Symbole e){
-		Set<State> single = new HashSet<State>();
-		single.add(state);
-		this.accessibleStates.put(e, single);
+		if(!this.accessibleStates.containsKey(e))
+			this.accessibleStates.put(e, new HashSet<State>());
+		this.accessibleStates.get(e).add(state);
 	}
 	/**
 	 * Return true if this state is a final state
