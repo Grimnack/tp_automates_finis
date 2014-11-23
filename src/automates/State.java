@@ -4,6 +4,7 @@
  */
 package automates;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,7 @@ public class State {
 	protected Map<Symbole, Set<State>> accessibleStates;
 	protected String name;
 	protected boolean isFinal;
+	protected boolean isInit;
 
 	// Methods
 
@@ -24,12 +26,24 @@ public class State {
 	 * @param name
 	 * @param isFinal
 	 */
-	public State(Map<Symbole, Set<State>> a, String name, boolean isFinal) {
+	public State(Map<Symbole, Set<State>> a, String name, boolean isFinal, boolean isInit) {
 		this.accessibleStates = a;
 		this.name = name;
 		this.isFinal = isFinal;
+		this.isInit=isInit;
 	}
-
+	public State(String name, boolean isInit, boolean isFinal){
+		this.name = name ;
+		this.isFinal = isFinal;
+		this.isInit=isInit;
+		this.accessibleStates = new HashMap<Symbole, Set<State>>() ;
+	}
+	
+	public void addAccessibleState(State state, Symbole e){
+		Set<State> single = new HashSet<State>();
+		single.add(state);
+		this.accessibleStates.put(e, single);
+	}
 	/**
 	 * Return true if this state is a final state
 	 * 

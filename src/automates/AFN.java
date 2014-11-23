@@ -29,9 +29,13 @@ public class AFN implements Automata {
 		this.initialsStates = init ;
 		this.alphabet = alphabet ;
 	}
-	public AFN(){
+	public AFN(Set<Symbole> alpha){
 		this.initialsStates=new HashSet<State>() ;
-		this.alphabet=new HashSet<Symbole>();
+		this.alphabet=alpha;
+	}
+	
+	public void addState(State state){
+		this.initialsStates.add(state);
 	}
 	
 	/**
@@ -116,9 +120,8 @@ public class AFN implements Automata {
 			 * on ajoute l'etat au set
 			 * sinon on stop*/
 			for(State state : lesEtats){
-				nouvelEtat = new State() ;
 				for(Symbole e : this.alphabet){
-					State nouveau = this.ajouteNouveaux(state.delta(e),lesEtats);
+					State nouveau = this.envoieNouveau(state.delta(e),lesEtats);
 					if(nouveau != null){ /*En gros 1 etat a été rajouté, bon maintenant coco réfléchit pour build l'AFN en meme temps*/
 						lesEtats.add(nouveau) ;
 						onContinue = true ;
@@ -127,7 +130,10 @@ public class AFN implements Automata {
 				}
 			}
 		}
-		return new AFN() ;
+		AFN res = new AFN(this.alphabet) ;
+		/*il faut ajouter les etats initiaux du set les Etats*/
+		res.addInit(lesEtats) ;
+		return res ;
 	}
 	/*
 	 * 
