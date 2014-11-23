@@ -26,6 +26,7 @@ public class State {
 	 * @param name
 	 * @param isFinal
 	 */
+	@Deprecated
 	public State(Map<Symbole, Set<State>> a, String name, boolean isFinal, boolean isInit) {
 		this.accessibleStates = a;
 		this.name = name;
@@ -62,6 +63,13 @@ public class State {
 		return this.isInit;
 	}
 
+	public static State merge(State st1, State st2) {
+		String stResName = st1.toString() + ", " + st2.toString();
+		boolean stResIsInit =  st1.isInit() || st2.isInit();
+		boolean stResIsFinal = st1.isFinal() || st2.isFinal();
+		return new State(stResName, stResIsInit, stResIsFinal);
+	}
+	
 	/**
 	 * Permet de connaitre les prochains Etats, attention c est un AFN il y a
 	 * plusieurs destinations possibles
