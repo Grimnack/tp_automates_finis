@@ -6,8 +6,6 @@ package automates;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -152,7 +150,6 @@ public class AFN implements Automata {
 	public AFN deterministic() {
 		Set<State> lesEtats = this.initialsStates;
 		boolean onContinue = true;
-		int numEtat = 0;
 		while (onContinue) {
 			onContinue = false;
 			/*
@@ -191,7 +188,6 @@ public class AFN implements Automata {
 	 *         [nouveaux]'s States
 	 */
 	private State envoieNouveau(Set<State> nouveaux, Set<State> courants) {
-		Set<State> res = courants;
 		State etatARajouter;
 		Iterator<State> i = nouveaux.iterator();
 		etatARajouter = i.next();
@@ -212,12 +208,9 @@ public class AFN implements Automata {
 	 *            the Set of State we want to analyse
 	 * @return true if there is more than one State in [ensemble]
 	 */
+	@SuppressWarnings("unused")
 	private boolean containsMany(Set<State> ensemble) {
 		int cpt = 0;
-		/*
-		 * ce qui serait cool ce serait de savoir si nouveaux contient plusieurs
-		 * etats
-		 */
 		for (State state : ensemble)
 			cpt++;
 		if (cpt > 1)
